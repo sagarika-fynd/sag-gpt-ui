@@ -1,0 +1,8 @@
+streamlit
+streamlit-chat
+pandas
+numpy
+openai
+requests
+backoff
+tiktoken
