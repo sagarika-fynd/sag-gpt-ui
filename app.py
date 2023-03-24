@@ -9,7 +9,6 @@ import time
 import os
 import openai
 import requests
-openai.api_key = os.getenv("API_KEY")
 import streamlit as st
 from streamlit_chat import message
 from openai.error import RateLimitError
