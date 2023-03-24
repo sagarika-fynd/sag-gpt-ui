@@ -1,15 +1,8 @@
 # **
-
-top_k = 3
-splitter='#--'
-
-import json 
 import streamlit as st
 import time 
 import os
 import openai
-openai.api_key = st.secrets["OPENAI_API_KEY"]
-import requests
 import streamlit as st
 from streamlit_chat import message
 from openai.error import RateLimitError
@@ -68,6 +61,12 @@ def chatgpt(messages):
     print(f"token {completion['usage']}")
     return(completion['choices'][0]["message"]["content"])
 
+def openapi_key_present():
+    if 'openapikey' in st.session_state:
+        if st.session_state['openapikey'] != "":
+            return True
+    return False
+
 def num_tokens_from_messages(messages, model="gpt-3.5-turbo-0301"):
     """Returns the number of tokens used by a list of messages."""
     try:
@@ -100,34 +99,37 @@ def num_tokens_from_messages(messages, model="gpt-3.5-turbo-0301"):
     return num_tokens
 
 
-user_input = get_text()
+openai.api_key = st.text_input("API Key",key="api_key", disabled=openapi_key_present())
+st.session_state['openapikey'] = openai.api_key
+if openapi_key_present():
+	user_input = get_text()
 
-if user_input and user_input != "" and user_input != "Hi":
+	if user_input and user_input != "" and user_input != "Hi":
     
-    pp =f'''
+	    pp =f'''
     
-    Answer the Question: {user_input}'''
-    messages = [{'role':'system','content':'You are an expert coder, who to works with type Typescript'}]
-    if st.session_state['generated']:
-        for i in range(len(st.session_state['past'])-2, len(st.session_state['past'])):
-            if i >= 0:
-                messages.append({'role':'user','content':st.session_state['past'][i]})
-                messages.append({'role':'assistant','content':st.session_state['generated'][i]})
-        messages.append({'role':'user','content':pp})
-    else:
-        messages = [{'role':'user','content':pp}]
+	    Answer the Question: {user_input}'''
+	    messages = [{'role':'system','content':'You are an expert coder, who to works with type Typescript'}]
+	    if st.session_state['generated']:
+	        for i in range(len(st.session_state['past'])-2, len(st.session_state['past'])):
+	            if i >= 0:
+	                messages.append({'role':'user','content':st.session_state['past'][i]})
+	                messages.append({'role':'assistant','content':st.session_state['generated'][i]})
+	        messages.append({'role':'user','content':pp})
+	    else:
+	        messages = [{'role':'user','content':pp}]
 
-    print(*messages, sep = "\n")
-    answer = chatgpt(messages)
-    st.session_state.past.append(user_input)
-    st.session_state.generated.append(answer)
-elif user_input == "Hi":
-    st.session_state.past.append("Hi")
-    st.session_state.generated.append("Hi, I am a GPT4 Chat Bot. Ask me anything")
+	    print(*messages, sep = "\n")
+	    answer = chatgpt(messages)
+	    st.session_state.past.append(user_input)
+	    st.session_state.generated.append(answer)
+	elif user_input == "Hi":
+	    st.session_state.past.append("Hi")
+	    st.session_state.generated.append("Hi, I am a GPT4 Chat Bot. Ask me anything")
 
-if st.session_state['generated']:
+	if st.session_state['generated']:
 
-    for i in range(len(st.session_state['generated'])-1, -1, -1):
-        message(st.session_state["generated"][i], key=str(i))
-        message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
+	    for i in range(len(st.session_state['generated'])-1, -1, -1):
+	        message(st.session_state["generated"][i], key=str(i))
+	        message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
 
