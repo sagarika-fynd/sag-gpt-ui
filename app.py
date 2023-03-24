@@ -8,7 +8,7 @@ import streamlit as st
 import time 
 import os
 import openai
-openai.api_key = st.secrets["OPEN_API_KEY"]
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 import requests
 import streamlit as st
 from streamlit_chat import message
