@@ -99,13 +99,14 @@ def num_tokens_from_messages(messages, model="gpt-3.5-turbo-0301"):
     return num_tokens
 
 
-openai.api_key = st.text_input("API Key",key="api_key", disabled=openapi_key_present())
+openai.api_key = st.text_input("API Key",key="api_key", type="password", disabled=openapi_key_present())
 st.session_state['openapikey'] = openai.api_key
 if openapi_key_present():
-	user_input = get_text()
+	user_input = st.text_input("You: ", "Hi", key="input")
+	search_button = st.button("Search")
 
-	if user_input and user_input != "" and user_input != "Hi":
-    
+
+	if search_button and user_input and user_input != "" and user_input != "Hi":    
 	    pp =f'''
     
 	    Answer the Question: {user_input}'''
