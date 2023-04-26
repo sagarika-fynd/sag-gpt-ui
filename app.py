@@ -37,11 +37,6 @@ if 'generated' not in st.session_state:
 if 'past' not in st.session_state:
     st.session_state['past'] = []
 
-def get_text():
-    input_text = st.text_input("You: ","Hi", key="input")
-    return input_text.strip()
- 
-
 @backoff.on_exception(backoff.expo, RateLimitError)
 def chatgpt(messages):
     if num_tokens_from_messages(messages,"gpt-4") > 8000:
@@ -102,7 +97,7 @@ def num_tokens_from_messages(messages, model="gpt-3.5-turbo-0301"):
 openai.api_key = st.text_input("API Key",key="api_key", type="password", disabled=openapi_key_present())
 st.session_state['openapikey'] = openai.api_key
 if openapi_key_present():
-	user_input = st.text_input("You: ", "Hi", key="input")
+	user_input = st.text_area("You: ", "Hi", key="input")
 	search_button = st.button("Search")
 
 
