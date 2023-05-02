@@ -97,35 +97,37 @@ def num_tokens_from_messages(messages, model="gpt-3.5-turbo-0301"):
 openai.api_key = st.text_input("API Key",key="api_key", type="password", disabled=openapi_key_present())
 st.session_state['openapikey'] = openai.api_key
 if openapi_key_present():
-	user_input = st.text_area("You: ", "Hi", key="input")
-	search_button = st.button("Search")
+    user_input = st.text_area("You: ", "Hi", key="input")
+    search_button = st.button("Search")
 
+    if search_button and user_input and user_input != "" and user_input != "Hi":    
+        pp = f'Answer the Question: {user_input}'
+        messages = [{'role': 'system', 'content': 'You are an expert coder, who works with TypeScript'}]
 
-	if search_button and user_input and user_input != "" and user_input != "Hi":    
-	    pp =f'''
-    
-	    Answer the Question: {user_input}'''
-	    messages = [{'role':'system','content':'You are an expert coder, who to works with type Typescript'}]
-	    if st.session_state['generated']:
-	        for i in range(len(st.session_state['past'])-2, len(st.session_state['past'])):
-	            if i >= 0:
-	                messages.append({'role':'user','content':st.session_state['past'][i]})
-	                messages.append({'role':'assistant','content':st.session_state['generated'][i]})
-	        messages.append({'role':'user','content':pp})
-	    else:
-	        messages = [{'role':'user','content':pp}]
+        if st.session_state['generated']:
+            for i in range(len(st.session_state['past'])-2, len(st.session_state['past'])):
+                if i >= 0:
+                    messages.append({'role': 'user', 'content': st.session_state['past'][i]})
+                    messages.append({'role': 'assistant', 'content': st.session_state['generated'][i]})
+            messages.append({'role': 'user', 'content': pp})
+        else:
+            messages = [{'role': 'user', 'content': pp}]
 
-	    print(*messages, sep = "\n")
-	    answer = chatgpt(messages)
-	    st.session_state.past.append(user_input)
-	    st.session_state.generated.append(answer)
-	elif user_input == "Hi":
-	    st.session_state.past.append("Hi")
-	    st.session_state.generated.append("Hi, I am a GPT4 Chat Bot. Ask me anything")
+        try:
+            answer = chatgpt(messages)
+            st.session_state.past.append(user_input)
+            st.session_state.generated.append(answer)
+        except Exception as e:
+            st.session_state.past.append(user_input)
+            st.session_state.generated.append("Sorry, I am not able to answer this question. Please try again later ")
+            st.error(str(e))
 
-	if st.session_state['generated']:
+    elif user_input == "Hi":
+        st.session_state.past.append("Hi")
+        st.session_state.generated.append("Hi, I am a GPT-4 Chat Bot. Ask me anything")
 
-	    for i in range(len(st.session_state['generated'])-1, -1, -1):
-	        message(st.session_state["generated"][i], key=str(i))
-	        message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
+    if st.session_state['generated']:
+        for i in range(len(st.session_state['generated'])-1, -1, -1):
+            message(st.session_state["generated"][i], key=str(i))
+            message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
 
