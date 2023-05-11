@@ -118,8 +118,6 @@ if openapi_key_present():
             st.session_state.past.append(user_input)
             st.session_state.generated.append(answer)
         except Exception as e:
-            st.session_state.past.append(user_input)
-            st.session_state.generated.append("Sorry, I am not able to answer this question. Please try again later ")
             st.error(str(e))
 
     elif user_input == "Hi":
