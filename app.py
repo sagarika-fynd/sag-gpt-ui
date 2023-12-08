@@ -37,7 +37,7 @@ if 'generated' not in st.session_state:
 if 'past' not in st.session_state:
     st.session_state['past'] = []
 
-@backoff.on_exception(backoff.expo, RateLimitError)
+
 def chatgpt(messages):
     if num_tokens_from_messages(messages,"gpt-4") > 8000:
         messages = messages[-2:]
