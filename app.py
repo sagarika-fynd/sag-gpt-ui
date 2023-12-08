@@ -5,7 +5,6 @@ import os
 import openai
 import streamlit as st
 from streamlit_chat import message
-from openai.error import RateLimitError
 import backoff
 import tiktoken
 
