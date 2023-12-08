@@ -53,8 +53,8 @@ def chatgpt(messages):
     completion = openai.chat.completions.create(
       model="gpt-4", 
       messages=messages)
-    print(f"token {completion['usage']}")
-    return(completion['choices'][0]["message"]["content"])
+    print(f"token {completion.usage}")
+    return(completion.choices[0].message.content)
 
 def openapi_key_present():
     if 'openapikey' in st.session_state:
