@@ -3,6 +3,7 @@ import streamlit as st
 import time 
 import os
 import openai
+
 import streamlit as st
 from streamlit_chat import message
 import backoff
@@ -49,7 +50,7 @@ def chatgpt(messages):
         print("Reprinting the message ::")
         print(*messages, sep = "\n")
         
-    completion = openai.ChatCompletion.create(
+    completion = openai.chat.completions.create(
       model="gpt-4", 
       messages=messages)
     print(f"token {completion['usage']}")
