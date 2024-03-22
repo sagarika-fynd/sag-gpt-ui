@@ -39,19 +39,19 @@ if 'past' not in st.session_state:
 
 
 def chatgpt(messages):
-    if num_tokens_from_messages(messages,"gpt-4") > 8000:
+    if num_tokens_from_messages(messages,"gpt-4-turbo-preview") > 128000:
         messages = messages[-2:]
         print("Found higher number of tokens  !!")
         print("Reprint message ::")
         print(*messages, sep = "\n")
-    if num_tokens_from_messages(messages,"gpt-4") > 8000:
+    if num_tokens_from_messages(messages,"gpt-4-turbo-preview") > 128000:
         messages = messages[-1:]
         print("Found higher number of tokens 2nd time also !!")
         print("Reprinting the message ::")
         print(*messages, sep = "\n")
         
     completion = openai.chat.completions.create(
-      model="gpt-4", 
+      model="gpt-4-turbo-preview", 
       messages=messages)
     print(f"token {completion.usage}")
     return(completion.choices[0].message.content)
@@ -78,6 +78,8 @@ def num_tokens_from_messages(messages, model="gpt-3.5-turbo-0301"):
     elif model == "gpt-3.5-turbo-0301":
         tokens_per_message = 4  # every message follows <im_start>{role/name}\n{content}<im_end>\n
         tokens_per_name = -1  # if there's a name, the role is omitted
+    elif model == "gpt-4-turbo-preview":
+        return num_tokens_from_messages(messages, model="gpt-4-0314")
     elif model == "gpt-4-0314":
         tokens_per_message = 3
         tokens_per_name = 1
