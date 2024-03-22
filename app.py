@@ -10,7 +10,7 @@ import backoff
 import tiktoken
 
 st.set_page_config(
-    page_title="GPT4 ChatBot",
+    page_title="GPT4 Bigger ChatBot",
     page_icon=":robot:"
 )
 
